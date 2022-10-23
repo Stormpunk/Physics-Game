@@ -23,6 +23,9 @@ public class MouseLook : MonoBehaviour
     private float m_fieldOfView;
     private Camera m_camera;
     #endregion
+    #region Variables for Interact
+    public float interactRange = 5f;
+    #endregion
     // Start is called before the first frame update
     private void Awake()
     {
@@ -41,6 +44,15 @@ public class MouseLook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Interact();
+        }
+        Debug.DrawRay(m_camera.transform.position, (m_camera.transform.forward * interactRange), Color.red);
+        //can confirm that the interact range is long enough.
+    }
+    private void FixedUpdate()
+    {
         MouseInputs();
         RotatePlayerY();
         RotatePlayerX();
@@ -56,7 +68,7 @@ public class MouseLook : MonoBehaviour
     private void RotatePlayerY()
     {
         #region Rotate Player on the Y Axis
-        m_Parent.Rotate(Vector3.up * m_mouseX);
+        m_Parent.Rotate(Vector3.up.normalized * m_mouseX);
         #endregion
     }
     private void RotatePlayerX()
@@ -66,5 +78,18 @@ public class MouseLook : MonoBehaviour
         m_rotateX = Mathf.Clamp(m_rotateX, xRotateMin, xRotateMax);
         m_camera.transform.localRotation = Quaternion.Euler(-m_rotateX, 0, 0);
         #endregion
+    }
+    public void Interact()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(m_camera.transform.position, m_camera.transform.forward, out hit, interactRange))
+        {
+            hit.transform.gameObject.SendMessage("Use");
+            //in theory, this will try and use the "use" function of any object hit by the raycast. Meaning that I can pick up an item, get into a vehicle or something else all depending on what I hit without having to differentiate in script
+        }
+        else
+        {
+            Debug.Log("No Useable Object");
+        }
     }
 }

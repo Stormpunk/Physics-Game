@@ -12,11 +12,18 @@ public class Movement : MonoBehaviour
     #endregion
     #region Misc
     public Rigidbody rb;
+    public bool isMoving;
+    public Animator m_anim;
     #endregion
     #region Jump
     public float jumpForce;
     public Vector3 jumpDist;
     public bool isGrounded;
+    #endregion
+    #region Points
+    //I'll toss points in here because why not, #spaghetticode
+    public int points;
+
     #endregion
     // Start is called before the first frame update
     private void Awake()
@@ -26,14 +33,22 @@ public class Movement : MonoBehaviour
     void Start()
     {
         moveSpeed = baseSpeed;
-        jumpForce = 1;
+        jumpForce = 4;
         jumpDist = new Vector3(0, 5f, 0);
+        points = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-      
+        if ((moveX > 0 || moveZ > 0))
+        {
+            m_anim.SetBool("isMoving", true);
+        }
+        else
+        {
+            m_anim.SetBool("isMoving", false);
+        }
         moveX = Input.GetAxisRaw("Horizontal");
         moveZ = Input.GetAxisRaw("Vertical");
         #region Jumping
@@ -43,7 +58,6 @@ public class Movement : MonoBehaviour
             isGrounded = false;
         }
         #endregion
-
     }
     private void FixedUpdate()
     {
