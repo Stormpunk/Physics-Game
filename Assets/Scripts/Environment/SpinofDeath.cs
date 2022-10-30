@@ -18,5 +18,9 @@ public class SpinofDeath : MonoBehaviour
         {
             transform.Rotate(0f, 1f, 0f, Space.Self);
         }
+        else
+        {
+            
+        }
     }
 }

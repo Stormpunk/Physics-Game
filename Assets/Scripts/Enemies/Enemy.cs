@@ -1,6 +1,7 @@
 using RPGCharacterAnims.Extensions;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -8,14 +9,18 @@ public class Enemy : MonoBehaviour
     #region Stats
     [SerializeField] float health, damage;
     #endregion
+    #region Ragdoll On/Off
+    public BoxCollider thisBoxCollider;
     public GameObject thisEnemy;
     public Animator thisAnimator;
+    #endregion
+
 
     // Start is called before the first frame update
     void Start()
     {
-        //CollectRagdolls();
-        //RagdollOff();
+        CollectRagdolls();
+        RagdollOff();
     }
 
     // Update is called once per frame
@@ -32,7 +37,7 @@ public class Enemy : MonoBehaviour
     }
     public void Death()
     {
-        thisEnemy.GetComponent<Animator>().enabled = false; 
+        RagdollOn();
         //now, in theory, this should disable the animator and turn the enemy into a rigidbody they can 
 
     }
@@ -40,6 +45,49 @@ public class Enemy : MonoBehaviour
     {
         health -= healthDamage;
     }
-    Collider[] ragDollColliders;
+   [SerializeField] Collider[] ragDollColliders;
     Rigidbody[] limbBodies;
+    public void CollectRagdolls()
+    {
+        ragDollColliders = thisEnemy.GetComponentsInChildren<Collider>();
+        limbBodies = thisEnemy.GetComponentsInChildren<Rigidbody>();
+    }
+    public void RagdollOff()
+    {
+        foreach(Collider col in ragDollColliders)
+        {
+            col.enabled = false;
+        }
+        foreach(Rigidbody rigid in limbBodies)
+        {
+            rigid.isKinematic = true;
+        }
+        thisBoxCollider.enabled = true;
+        thisAnimator.enabled = true;
+        GetComponent<Rigidbody>().isKinematic = false;
+    }
+    public void RagdollOn()
+    {
+        foreach (Collider col in ragDollColliders)
+        {
+            col.enabled = true;
+        }
+        foreach (Rigidbody rigid in limbBodies)
+        {
+            rigid.isKinematic = false;
+        }
+        Destroy(thisBoxCollider);
+        thisAnimator.enabled = false;
+        this.gameObject.tag = ("Grabbable");
+        UnityEngine.Object.Destroy(this.gameObject.GetComponent<Rigidbody>());
+
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Grabbable")
+        {
+            Death();
+        }
+    }
+
 }
