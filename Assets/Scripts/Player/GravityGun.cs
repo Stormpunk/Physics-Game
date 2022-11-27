@@ -27,6 +27,7 @@ public class GravityGun : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        #region Testing Gravity Function
         if (Input.GetKeyDown(KeyCode.I))
         {
             throwForce = maxForce;
@@ -35,9 +36,11 @@ public class GravityGun : MonoBehaviour
         {
             throwForce = minForce;
         }
+        #endregion
+        #region Gravity Gun System
         if (grabbedBody)
         {
-                grabbedBody.MovePosition(Vector3.Lerp(grabbedBody.position, hoverPoint.transform.position, Time.deltaTime * lerpSpeed));
+            grabbedBody.MovePosition(Vector3.Lerp(grabbedBody.position, hoverPoint.transform.position, Time.deltaTime * lerpSpeed));
             //if there is a grabbedbody, it follows the hoverpoint.
             //this piece of shit doesn't stay away from the player if I move towards it. I might fix this but it's a non priority rn
             if (Input.GetMouseButtonDown(1))
@@ -48,7 +51,7 @@ public class GravityGun : MonoBehaviour
                 //if the RMB is pressed, the rigidbody takes control and detects the collisions, adds force and throws the object forward
             }
         }
-        
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (grabbedBody && grabbedBody.gameObject.CompareTag("Grabbable"))
@@ -61,7 +64,7 @@ public class GravityGun : MonoBehaviour
             {
                 RaycastHit hit;
                 Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
-                if(Physics.Raycast(ray, out hit, maxDist))
+                if (Physics.Raycast(ray, out hit, maxDist))
                 {
                     grabbedBody = hit.collider.gameObject.GetComponent<Rigidbody>();
                     if (grabbedBody && grabbedBody.gameObject.CompareTag("Grabbable"))
@@ -79,6 +82,7 @@ public class GravityGun : MonoBehaviour
 
             }
         }
+        #endregion
     }
     public void IncreaseForce(float force)
     {

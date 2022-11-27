@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
-    public enum Ammo {normal, force};
+    public float currentAmmo;
+    public float maxAmmo;
     public Animator anim;
     public Camera myCam;
     public ParticleSystem muzzleFlash;
@@ -45,9 +46,5 @@ public class Gun : MonoBehaviour
         anim.SetBool("Fire", true);
         yield return new WaitForSeconds(1);
         anim.SetBool("Fire", false);
-    }
-    public void ChangeAmmo()
-    {
-
     }
 }

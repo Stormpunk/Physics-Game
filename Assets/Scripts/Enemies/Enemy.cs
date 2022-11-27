@@ -1,4 +1,5 @@
 using RPGCharacterAnims.Extensions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -45,12 +46,16 @@ public class Enemy : MonoBehaviour
     {
         health -= healthDamage;
     }
-   [SerializeField] Collider[] ragDollColliders;
-    Rigidbody[] limbBodies;
+    //[SerializeField] Collider[] ragDollColliders;
+    // Rigidbody[] limbBodies;
+   [SerializeField] List<Collider> ragDollColliders = new List<Collider>();
+    [SerializeField]List<Rigidbody> limbBodies = new List<Rigidbody>();
     public void CollectRagdolls()
     {
-        ragDollColliders = thisEnemy.GetComponentsInChildren<Collider>();
-        limbBodies = thisEnemy.GetComponentsInChildren<Rigidbody>();
+        GetComponentsInChildren(ragDollColliders);
+        GetComponentsInChildren(limbBodies);
+        ragDollColliders.RemoveAt(0);
+        limbBodies.RemoveAt(0);
     }
     public void RagdollOff()
     {
@@ -78,13 +83,13 @@ public class Enemy : MonoBehaviour
         }
         Destroy(thisBoxCollider);
         thisAnimator.enabled = false;
-        this.gameObject.tag = ("Grabbable");
+        //this.gameObject.tag = ("Grabbable");
         UnityEngine.Object.Destroy(this.gameObject.GetComponent<Rigidbody>());
 
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "Grabbable")
+        if(collision.gameObject.tag == "Grabbable" || collision.gameObject.tag == "WreckingBall")
         {
             Death();
         }

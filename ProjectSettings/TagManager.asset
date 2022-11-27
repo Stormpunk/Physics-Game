@@ -8,6 +8,9 @@ TagManager:
   - Enemy
   - Environment
   - WreckingBall
+  - Door
+  - Collide
+  - Trap
   layers:
   - Default
   - TransparentFX

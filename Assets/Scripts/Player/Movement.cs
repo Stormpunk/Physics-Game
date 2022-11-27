@@ -33,7 +33,7 @@ public class Movement : MonoBehaviour
     void Start()
     {
         moveSpeed = baseSpeed;
-        jumpForce = 4;
+        jumpForce = 5;
         jumpDist = new Vector3(0, 5f, 0);
         points = 0;
     }
